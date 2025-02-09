@@ -19,8 +19,8 @@ const CardGame = () => {
   const CARD_WIDTH = 96;
   const CARD_HEIGHT = 128;
   const GAP = 16;
-  const BASE_SWAP_TIME = 500; // Tiempo base para cada intercambio
-  const MIN_SWAP_TIME = 200; // Tiempo mínimo para cada intercambio
+  const BASE_SWAP_TIME = 500;
+  const MIN_SWAP_TIME = 200;
   
   useEffect(() => {
     resetForNextRound();
@@ -48,20 +48,19 @@ const CardGame = () => {
     setPositions(initialPositions);
     setGameState('initial');
     setMessage('¡Observa dónde está el comodín!');
-    setJokerFinalPosition(0); // Reinicia la posición final del comodín
+    setJokerFinalPosition(0);
   };
 
   const generateRandomSwaps = () => {
-    const numSwaps = 8 + Math.floor(Math.random() * 4); // Entre 8 y 11 intercambios
+    const numSwaps = 8 + Math.floor(Math.random() * 4);
     const swaps = [];
-    let currentJokerPos = 0; // Comenzamos con el comodín en la posición 0
+    let currentJokerPos = 0;
 
     for (let i = 0; i < numSwaps; i++) {
-      // Genera un intercambio aleatorio que involucre la posición actual del comodín
-      const otherPos = Math.floor(Math.random() * 3); // 0-2
-      const pos2 = otherPos >= currentJokerPos ? otherPos + 1 : otherPos; // Ajusta para evitar la misma posición
+      const otherPos = Math.floor(Math.random() * 3); 
+      const pos2 = otherPos >= currentJokerPos ? otherPos + 1 : otherPos; 
       swaps.push([currentJokerPos, pos2]);
-      currentJokerPos = pos2; // Actualiza la posición del comodín
+      currentJokerPos = pos2; 
     }
 
     setJokerFinalPosition(currentJokerPos);
@@ -86,7 +85,6 @@ const CardGame = () => {
     setIsMixing(true);
     setGameState('mixing');
 
-    // Calcula el tiempo de intercambio basado en la ronda actual
     const swapTime = Math.max(
       MIN_SWAP_TIME,
       BASE_SWAP_TIME - ((currentRound - 1) * 100)
@@ -104,7 +102,7 @@ const CardGame = () => {
           setTimeout(() => {
             const mixedCards = [...cards];
             if (currentTrial === 1) {
-              // Trial normal - el comodín termina donde indican las animaciones
+              // Trial normal
               const newCards = Array(4).fill(null).map((_, index) => ({
                 id: index,
                 isJoker: index === jokerFinalPosition,
@@ -112,11 +110,11 @@ const CardGame = () => {
               }));
               setCards(newCards);
             } else if (currentTrial === 2) {
-              // Trial de fracaso - eliminar el comodín
+              // Trial de fracaso
               mixedCards.forEach(card => card.isJoker = false);
               setCards(mixedCards);
             } else {
-              // Trial de éxito - todos son comodín
+              // Trial de éxito
               mixedCards.forEach(card => card.isJoker = true);
               setCards(mixedCards);
             }
